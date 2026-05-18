@@ -36,7 +36,7 @@ public class ap {
         int n = sc.nextInt();
 
         // Call the AP function
-        ap_sum(5, 2, n);
+        ap_sum(4, 2, n);
 
         // Close Scanner to release resources
         sc.close();

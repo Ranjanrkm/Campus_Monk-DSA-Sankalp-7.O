@@ -195,7 +195,7 @@ public class arraylist {
  * whereas ArrayList can dynamically increase
  * or decrease its size during execution.
  *
- * ------------------------------------------
+ * -----------------------------------------
  *
  * Q: Why do we use Integer instead of int?
  *

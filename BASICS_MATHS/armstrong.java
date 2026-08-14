@@ -1,131 +1,475 @@
 import java.util.*;
 
 /*
-Problem Statement:
-Check whether a given number is an Armstrong number or not.
+=========================================================
+PROBLEM STATEMENT
+=========================================================
+Check whether a given number is an Armstrong Number
+or not.
 
-What is an Armstrong Number?
-- For a number with k digits, each digit is raised to the power k.
-- Then all those values are added.
-- If the final sum is equal to the original number, it is an Armstrong number.
+An Armstrong Number is a number that is equal to the
+sum of its digits raised to the power of the total
+number of digits.
+
+Formula:
+
+For a number having k digits:
+
+(d1^k + d2^k + d3^k + ... + dk^k) = Original Number
 
 Example:
-153 = 1^3 + 5^3 + 3^3 = 153
-So, 153 is an Armstrong number.
 
-Input Format:
-- A single integer n
+153
 
-Output Format:
-- If n is Armstrong:
-  Yes it's an armstrong number
-- Otherwise:
-  No it's not a armstrong number
+Number of Digits = 3
 
-Dry Run Example 1:
+1^3 + 5^3 + 3^3
+= 1 + 125 + 27
+= 153
+
+Therefore, 153 is an Armstrong Number.
+
+=========================================================
+INPUT FORMAT
+=========================================================
+A single integer n.
+
+Example:
+153
+
+=========================================================
+OUTPUT FORMAT
+=========================================================
+Print:
+
+Yes it's an armstrong number
+
+or
+
+No it's not a armstrong number
+
+=========================================================
+DRY RUN EXAMPLE 1
+=========================================================
 Input:
 153
 
-Working:
-Number = 153
-Number of digits = 3
+Initial:
+original = 153
+cnt = 3
+sum = 0
 
-Step 1:
-Last digit = 3
-Sum = 3^3 = 27
+Iteration 1:
+Last Digit = 3
 
-Step 2:
-Last digit = 5
-Sum = 27 + 5^3 = 27 + 125 = 152
+sum = 0 + (3^3)
+sum = 27
 
-Step 3:
-Last digit = 1
-Sum = 152 + 1^3 = 153
+Remaining Number:
+15
+
+Iteration 2:
+Last Digit = 5
+
+sum = 27 + (5^3)
+sum = 27 + 125
+sum = 152
+
+Remaining Number:
+1
+
+Iteration 3:
+Last Digit = 1
+
+sum = 152 + (1^3)
+sum = 153
+
+Remaining Number:
+0
 
 Final:
-Sum = 153
-Since sum == original number, it is Armstrong.
+
+sum = 153
+original = 153
+
+sum == original
 
 Output:
 Yes it's an armstrong number
 
-Dry Run Example 2:
+=========================================================
+DRY RUN EXAMPLE 2
+=========================================================
 Input:
 123
 
-Working:
-Number = 123
-Number of digits = 3
+Initial:
+original = 123
+cnt = 3
+sum = 0
 
-Step 1:
-3^3 = 27
+Iteration 1:
+Last Digit = 3
 
-Step 2:
-2^3 = 8
-Sum = 35
+sum = 27
 
-Step 3:
-1^3 = 1
-Sum = 36
+Iteration 2:
+Last Digit = 2
+
+sum = 27 + 8
+sum = 35
+
+Iteration 3:
+Last Digit = 1
+
+sum = 35 + 1
+sum = 36
 
 Final:
-Sum = 36
-Since sum != original number, it is not Armstrong.
+
+sum = 36
+original = 123
+
+sum != original
 
 Output:
 No it's not a armstrong number
+
+=========================================================
+FULLY COMMENTED JAVA CODE
+=========================================================
 */
 
 public class armstrong {
 
-    // This method checks whether the given number is Armstrong or not
+    /*
+    =====================================================
+    METHOD NAME : isArmstrong
+    =====================================================
+
+    Purpose:
+    Check whether the given number is an
+    Armstrong Number or not.
+
+    Returns:
+    true  -> Armstrong Number
+    false -> Not an Armstrong Number
+    =====================================================
+    */
     public static boolean isArmstrong(int n) {
 
-        // Armstrong number is usually defined for non-negative numbers
+        /*
+        Armstrong Numbers are generally
+        defined for non-negative integers.
+
+        Example:
+        -153
+
+        Negative numbers are not
+        Armstrong Numbers.
+        */
         if (n < 0) {
             return false;
         }
 
-        // Store original number so we can compare at the end
+        /*
+        Store the original number.
+
+        This value will be used later
+        for final comparison.
+
+        Example:
+
+        n = 153
+
+        original = 153
+        */
         int original = n;
 
-        // Count number of digits
-        // Example: 153 has 3 digits
+        /*
+        Count the total number of digits.
+
+        Example:
+
+        n = 153
+
+        String.valueOf(153) = "153"
+
+        Length = 3
+        */
         int cnt = String.valueOf(n).length();
 
-        // This variable stores the sum of powered digits
+        /*
+        Store the sum of powered digits.
+
+        Initially:
+
+        sum = 0
+        */
         int sum = 0;
 
-        // Extract digits one by one from right to left
+        /*
+        Extract digits one by one from
+        right to left until the number
+        becomes zero.
+        */
         while (n != 0) {
-            int ld = n % 10; // ld = last digit
 
-            // Add digit raised to the power of total digits
+            /*
+            Extract the last digit.
+
+            Example:
+
+            n = 153
+
+            ld = 153 % 10
+
+            ld = 3
+            */
+            int ld = n % 10;
+
+            /*
+            Raise the digit to the power
+            of total digit count and add
+            it to the running sum.
+
+            Example:
+
+            ld = 5
+            cnt = 3
+
+            5^3 = 125
+
+            sum += 125
+            */
             sum += (int) Math.pow(ld, cnt);
 
-            // Remove last digit
+            /*
+            Remove the last digit.
+
+            Example:
+
+            n = 153
+
+            n = 15
+            */
             n /= 10;
         }
 
-        // If sum equals original number, it is Armstrong
+        /*
+        Compare the calculated sum
+        with the original number.
+
+        If both are equal:
+
+        Armstrong Number
+
+        Otherwise:
+
+        Not an Armstrong Number
+        */
         return sum == original;
     }
 
     public static void main(String args[]) {
-        // Create Scanner object for input
+
+        /*
+        Create Scanner object for
+        reading user input.
+        */
         Scanner sc = new Scanner(System.in);
 
-        // Read the number
+        /*
+        Read the integer entered
+        by the user.
+
+        Example Input:
+        153
+
+        After execution:
+        n = 153
+        */
         int n = sc.nextInt();
 
-        // Call Armstrong check function
+        /*
+        Call the Armstrong checking
+        method and print the result.
+        */
         if (isArmstrong(n)) {
+
+            /*
+            Executed when the number
+            is an Armstrong Number.
+            */
             System.out.println("Yes it's an armstrong number");
+
         } else {
+
+            /*
+            Executed when the number
+            is not an Armstrong Number.
+            */
             System.out.println("No it's not a armstrong number");
         }
 
-        // Close Scanner
+        /*
+        Close Scanner resource.
+        */
         sc.close();
     }
 }
+
+/*
+=========================================================
+IMPORTANT NOTES FOR REVISION
+=========================================================
+
+1. ARMSTRONG NUMBER CONCEPT
+
+   A number is Armstrong if:
+
+   Sum of (Digit ^ Total Digits)
+   equals
+   Original Number.
+
+2. DIGIT EXTRACTION TECHNIQUE
+
+   Last Digit:
+   n % 10
+
+   Remove Last Digit:
+   n /= 10
+
+   This is one of the most important
+   number manipulation techniques in DSA.
+
+3. Math.pow(base, exponent)
+
+   Used to calculate:
+
+   digit^count
+
+   Example:
+
+   Math.pow(5,3) = 125
+
+4. SPECIAL CASE
+
+   Single digit numbers:
+
+   0, 1, 2, 3, ... 9
+
+   are Armstrong Numbers because:
+
+   5^1 = 5
+
+5. INTERVIEW OPTIMIZATION
+
+   Counting digits using:
+
+   String.valueOf(n).length()
+
+   is simple and readable.
+
+   Another approach is using
+   repeated division by 10.
+
+=========================================================
+HOW TO EXPLAIN THIS CODE IN FRONT OF INTERVIEWER
+=========================================================
+
+"I first store the original number because the
+input number will be modified during digit extraction.
+
+Then I count the total number of digits.
+
+Using a loop, I extract each digit using the
+modulus operator and raise it to the power of
+the digit count using Math.pow().
+
+The powered values are added into a running sum.
+
+Finally, I compare the computed sum with the
+original number.
+
+If both values are equal, the number is an
+Armstrong Number; otherwise, it is not."
+
+=========================================================
+TIME COMPLEXITY
+=========================================================
+
+O(d)
+
+Where:
+
+d = Number of Digits
+
+Reason:
+
+The loop processes each digit exactly once.
+
+Examples:
+
+153 -> 3 iterations
+
+9474 -> 4 iterations
+
+Therefore:
+
+Time Complexity = O(d)
+
+=========================================================
+SPACE COMPLEXITY
+=========================================================
+
+O(1)
+
+Reason:
+
+Only a few variables are used:
+
+- original
+- cnt
+- sum
+- ld
+
+No additional array or collection is created.
+
+=========================================================
+INTERVIEW QUICK ANSWER
+=========================================================
+
+Q1. What is an Armstrong Number?
+
+Answer:
+An Armstrong Number is a number that is equal to
+the sum of its digits raised to the power of the
+total number of digits.
+
+Example:
+153 = 1³ + 5³ + 3³ = 153
+
+---------------------------------------------------------
+
+Q2. Why do we use n % 10 and n / 10?
+
+Answer:
+n % 10 extracts the last digit of a number,
+while n / 10 removes the last digit.
+These operations are fundamental for digit-based
+problems in DSA.
+
+---------------------------------------------------------
+
+Q3. Why is the time complexity O(d)?
+
+Answer:
+Because the algorithm processes each digit exactly
+once, where d represents the number of digits in
+the given number.
+
+=========================================================
+END OF FILE
+=========================================================
+*/

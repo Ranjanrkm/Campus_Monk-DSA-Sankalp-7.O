@@ -1,270 +1,444 @@
 import java.util.*;
 
 /*
-Problem Statement:
+=========================================================
+PROBLEM STATEMENT
+=========================================================
 Check whether a given number is a Perfect Number or not.
 
-What is a Perfect Number?
-- A perfect number is a number whose sum of proper divisors
-  (excluding the number itself) is equal to the number.
+A Perfect Number is a positive integer whose sum of all
+proper divisors, excluding the number itself, is equal
+to the number.
 
 Example:
-6 -> Divisors are: 1, 2, 3
+
+6 -> Proper Divisors: 1, 2, 3
 Sum = 1 + 2 + 3 = 6
-So, 6 is a Perfect Number.
+
+Therefore, 6 is a Perfect Number.
 
 Another Example:
-28 -> Divisors are: 1, 2, 4, 7, 14
-Sum = 28
-So, 28 is also a Perfect Number.
 
-Input Format:
-- A single integer n
+28 -> Proper Divisors: 1, 2, 4, 7, 14
+Sum = 1 + 2 + 4 + 7 + 14 = 28
 
-Output Format:
-- If number is perfect:
-  n : is a perfect number
+Therefore, 28 is a Perfect Number.
 
-- Otherwise:
-  n : is not a perfect number
+=========================================================
+INPUT FORMAT
+=========================================================
+A single integer n.
 
---------------------------------------------------
-Dry Run Example 1:
+Example:
+6
+
+For this problem, the uploaded TCS NQT input/output
+material's standard scalar-integer input style applies:
+
+Scanner sc = new Scanner(System.in);
+int n = sc.nextInt();
+
+No array, string-line, comma-separated, bracketed, or
+2D-matrix parsing is required because the problem
+contains only one integer input.
+
+=========================================================
+OUTPUT FORMAT
+=========================================================
+If the number is a Perfect Number, print:
+
+n : is a perfect number
+
+Otherwise print:
+
+n : is not a perfect number
+
+No additional prompts such as:
+
+Enter Number:
+
+or
+
+Output:
+
+should be printed in a coding-round solution.
+
+=========================================================
+DRY RUN EXAMPLE 1
+=========================================================
 Input:
 6
 
-Working:
-Initial sum = 1
+Initial:
+sum = 1
 
-Loop runs from 2 to sqrt(6)
+Why?
+1 is always a proper divisor of every number greater
+than 1.
+
+Loop checks values from 2 to sqrt(6).
 
 i = 2
+
 6 % 2 == 0
 
-Add divisors:
-sum = 1 + 2 = 3
+First divisor:
+2
 
-Another divisor:
+Paired divisor:
 6 / 2 = 3
 
-sum = 3 + 3 = 6
+Update:
+
+sum = 1 + 2 + 3
+sum = 6
 
 Final:
+
 sum = 6
+n = 6
+
 sum == n
+
+Therefore, 6 is a Perfect Number.
 
 Output:
 6 : is a perfect number
 
---------------------------------------------------
-Dry Run Example 2:
+=========================================================
+DRY RUN EXAMPLE 2
+=========================================================
 Input:
 10
 
-Working:
-Initial sum = 1
+Initial:
+sum = 1
 
 i = 2
+
 10 % 2 == 0
 
-sum = 1 + 2 = 3
+First divisor:
+2
 
-Another divisor:
+Paired divisor:
 10 / 2 = 5
 
-sum = 3 + 5 = 8
+Update:
+
+sum = 1 + 2 + 5
+sum = 8
+
+sqrt(10) is approximately 3.16,
+so the loop finishes after i = 3.
 
 Final:
+
 sum = 8
+n = 10
+
 sum != n
+
+Therefore, 10 is not a Perfect Number.
 
 Output:
 10 : is not a perfect number
+
+=========================================================
+FULLY COMMENTED JAVA CODE
+=========================================================
 */
 
 public class perfectNo {
 
-    // Method to check whether a number is perfect or not
+    /*
+    =====================================================
+    METHOD NAME : isPerfect
+    =====================================================
+
+    Purpose:
+    Check whether the given number is a Perfect Number.
+
+    Approach:
+    1. Reject numbers <= 1.
+    2. Start sum with 1.
+    3. Check divisors only up to sqrt(n).
+    4. Whenever i divides n, add both:
+       i
+       n / i
+    5. Avoid adding the same divisor twice for
+       perfect-square numbers.
+    6. Compare the divisor sum with n.
+
+    Returns:
+    true  -> Perfect Number
+    false -> Not a Perfect Number
+    =====================================================
+    */
     public static boolean isPerfect(int n) {
 
-        // Perfect numbers are positive integers
-        // Numbers less than or equal to 1 are not perfect
+        /*
+        Perfect Numbers are positive integers greater
+        than 1.
+
+        Examples:
+
+        0  -> Not Perfect
+        1  -> Not Perfect
+        -6 -> Not Perfect
+        */
         if (n <= 1) {
             return false;
         }
 
-        // 1 is always a proper divisor
-        int sum = 1;
+        /*
+        Use long for the sum.
 
-        // Loop only till square root of n
-        // This reduces time complexity
-        for (int i = 2; i <= Math.sqrt(n); i++) {
+        This gives safer arithmetic when adding
+        divisor pairs for large integer inputs.
+        */
+        long sum = 1;
 
-            // Check if i divides n completely
+        /*
+        Check possible divisors only up to sqrt(n).
+
+        Instead of checking every value from 2 to n - 1,
+        divisor pairs allow us to stop at sqrt(n).
+
+        Example:
+
+        For 28:
+
+        2 -> paired with 14
+        4 -> paired with 7
+
+        Once we pass sqrt(28), the corresponding
+        paired divisors have already been found.
+        */
+        for (int i = 2; (long) i * i <= n; i++) {
+
+            /*
+            Check whether i divides n completely.
+
+            If the remainder is zero,
+            i is a divisor of n.
+            */
             if (n % i == 0) {
 
-                // Add divisor i
+                /*
+                Add the smaller divisor i
+                to the proper-divisor sum.
+                */
                 sum += i;
 
-                // Add paired divisor (n / i)
-                // Avoid duplicate addition for perfect squares
-                if (n / i != i) {
-                    sum += n / i;
+                /*
+                Calculate the paired divisor.
+
+                Example:
+
+                n = 28
+                i = 2
+
+                n / i = 14
+
+                Therefore, 2 and 14 form
+                a divisor pair.
+                */
+                int pairedDivisor = n / i;
+
+                /*
+                For a perfect square, both divisor
+                values can be the same.
+
+                Example:
+
+                n = 36
+                i = 6
+
+                36 / 6 = 6
+
+                Adding both would count 6 twice,
+                so add the paired divisor only
+                when the two values are different.
+                */
+                if (pairedDivisor != i) {
+                    sum += pairedDivisor;
                 }
             }
         }
 
-        // If sum of proper divisors equals number,
-        // then it is a perfect number
+        /*
+        If the sum of all proper divisors is exactly
+        equal to the original number, it is a
+        Perfect Number.
+        */
         return sum == n;
     }
 
     public static void main(String args[]) {
 
-        // Create Scanner object for input
+        /*
+        Create Scanner object to read the integer
+        from standard input.
+
+        This follows the standard scalar integer
+        input pattern from the uploaded TCS NQT
+        input/output material.
+        */
         Scanner sc = new Scanner(System.in);
 
-        // Read number from user
+        /*
+        Read the number.
+
+        Example Input:
+        6
+
+        After execution:
+        n = 6
+        */
         int n = sc.nextInt();
 
-        // Check perfect number condition
+        /*
+        Call the Perfect Number checking method.
+
+        If it returns true, print the required
+        Perfect Number output.
+        */
         if (isPerfect(n)) {
+
+            /*
+            Print the exact required output format.
+            */
             System.out.println(n + " : is a perfect number");
+
         } else {
+
+            /*
+            Print the exact required output format
+            for a non-perfect number.
+            */
             System.out.println(n + " : is not a perfect number");
         }
 
-        // Close Scanner
+        /*
+        Close Scanner after input processing.
+        */
         sc.close();
     }
 }
 
 /*
-==================================================
-Important Notes for Revision
-==================================================
+=========================================================
+IMPORTANT NOTES FOR REVISION
+=========================================================
 
-1) Proper Divisors:
-- Proper divisors are divisors excluding the number itself.
+1. DIVISOR-PAIR OPTIMIZATION
+   If i divides n, then n / i is also a divisor.
+   Therefore, checking only up to sqrt(n) is enough
+   to find all divisor pairs.
 
-Example:
-Divisors of 12:
-1, 2, 3, 4, 6, 12
+2. PERFECT-SQUARE DUPLICATE CHECK
+   When n is a perfect square, i and n / i can be equal.
+   Example:
+   36 -> 6 and 6
+   So the paired divisor must not be added twice.
 
-Proper divisors:
-1, 2, 3, 4, 6
+3. JAVA OVERFLOW + LOOP OPTIMIZATION
+   - long is used for the divisor sum for safer arithmetic.
+   - (long) i * i <= n avoids repeated Math.sqrt(n)
+     calculations and prevents i * i overflow.
 
---------------------------------------------------
+=========================================================
+HOW TO EXPLAIN THIS CODE IN FRONT OF INTERVIEWER
+=========================================================
 
-2) Why sum starts from 1?
-- Because 1 is always a proper divisor of every number
-  greater than 1.
+"I first reject numbers less than or equal to 1 because
+Perfect Numbers are positive integers greater than 1.
 
---------------------------------------------------
+Then I initialize the sum with 1 because 1 is always
+a proper divisor of every number greater than 1.
 
-3) Why loop till sqrt(n)?
-- Divisors always come in pairs.
+Instead of checking every value up to n, I check only
+up to the square root of n. Whenever I find a divisor i,
+I also get its paired divisor using n divided by i.
 
-Example:
-For 28:
-2 and 14
-4 and 7
+For perfect-square numbers, both divisors can be the same,
+so I make sure not to add that value twice.
 
-So checking till sqrt(n) is enough.
+Finally, if the sum of all proper divisors equals the
+original number, I return true.
 
---------------------------------------------------
+The optimized solution runs in O(sqrt(n)) time and uses
+O(1) auxiliary space."
 
-4) Why check:
-if(n / i != i)
+=========================================================
+TIME COMPLEXITY
+=========================================================
 
-- To avoid duplicate addition in perfect squares.
+O(√n)
 
-Example:
-For 36:
-6 * 6 = 36
+Reason:
 
-Here divisor pair is same,
-so add only once.
+The loop checks possible divisors only up to
+the square root of n.
 
---------------------------------------------------
+Instead of:
 
-5) Time Complexity:
-O(sqrt(n))
+1, 2, 3, ... , n - 1
 
---------------------------------------------------
+we check approximately:
 
-6) Space Complexity:
+1, 2, 3, ... , √n
+
+Therefore the time complexity is O(√n).
+
+=========================================================
+SPACE COMPLEXITY
+=========================================================
+
 O(1)
 
---------------------------------------------------
+Reason:
 
-7) Edge Cases:
-- n <= 1 -> not a perfect number
-- Perfect square numbers
-- Large numbers
-*/
+Only a constant number of variables are used:
 
-/*
-==================================================
-How to Explain This Code in Front of Interviewer
-==================================================
+- sum
+- i
+- pairedDivisor
 
-1) First explain the problem:
-"We need to check whether the sum of proper divisors
-of a number is equal to the number itself."
+No array, ArrayList, HashMap, or other additional
+data structure is created.
 
-Example:
-6 -> 1 + 2 + 3 = 6
+=========================================================
+INTERVIEW QUICK ANSWER
+=========================================================
 
---------------------------------------------------
+Q1. Why is it sufficient to check divisors only up to √n?
 
-2) Explain the approach:
-"I initialize sum with 1 because 1 is always a proper divisor.
-Then I iterate from 2 to sqrt(n) to find divisors efficiently."
+Answer:
+Divisors occur in pairs. If i divides n, then n / i
+is also a divisor. Once i becomes greater than √n,
+its paired divisor would already have been found.
 
---------------------------------------------------
+---------------------------------------------------------
 
-3) Explain divisor pair optimization:
-"If i divides n,
-then n/i is also a divisor.
+Q2. Why do we check pairedDivisor != i?
 
-Example:
-For 28:
-2 and 14 are divisor pairs.
+Answer:
+To avoid counting the same divisor twice when n is
+a perfect square. For example, for 36, when i is 6,
+n / i is also 6, so 6 should be added only once.
 
-So instead of checking till n,
-I only check till sqrt(n)."
+---------------------------------------------------------
 
---------------------------------------------------
+Q3. Why is this solution O(√n) instead of O(n)?
 
-4) Explain duplicate check:
-"For perfect square numbers,
-both divisors can become same.
+Answer:
+Because the algorithm does not check every number up
+to n. It checks only possible divisor values up to
+√n and gets the second divisor from n / i.
 
-Example:
-36 -> 6 and 6
-
-So I avoid adding the same divisor twice."
-
---------------------------------------------------
-
-5) Explain final comparison:
-"If sum becomes equal to the original number,
-then it is a perfect number."
-
---------------------------------------------------
-
-6) Complexity:
-Time Complexity:
-O(sqrt(n))
-
-Space Complexity:
-O(1)
-
---------------------------------------------------
-
-7) Short Interview Summary:
-"This solution uses divisor pair optimization
-to efficiently calculate the sum of proper divisors
-in O(sqrt(n)) time."
+=========================================================
+END OF FILE
+=========================================================
 */

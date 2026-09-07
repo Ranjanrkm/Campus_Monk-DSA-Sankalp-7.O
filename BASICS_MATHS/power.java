@@ -1,265 +1,470 @@
 import java.util.*;
 
 /*
-Problem Statement:
+=========================================================
+PROBLEM STATEMENT
+=========================================================
 Find the value of n raised to the power x using
-Binary Exponentiation (Fast Power Algorithm).
+Binary Exponentiation, also called the Fast Power
+Algorithm.
 
-Meaning:
 Calculate:
+
 n^x
 
 Example:
+
 2^5 = 32
 3^4 = 81
 
---------------------------------------------------
-Why use Binary Exponentiation?
-- Normal method takes O(x) time.
-- Binary Exponentiation reduces it to O(log x).
-- Very useful for coding interviews and competitive programming.
+Why Binary Exponentiation?
 
---------------------------------------------------
-Input Format:
-- First integer -> base number (n)
-- Second integer -> power/exponent (x)
+A normal multiplication approach takes O(x) time.
 
-Output Format:
-- Print the value of n^x
+Binary Exponentiation reduces the number of operations
+to O(log x) by repeatedly reducing the exponent.
 
---------------------------------------------------
-Dry Run Example 1:
+=========================================================
+INPUT FORMAT
+=========================================================
+Two integers:
+
+First integer:
+n -> Base number
+
+Second integer:
+x -> Power / Exponent
+
+Example:
+2
+5
+
+For this problem, the input is scalar integer input,
+so Scanner.nextInt() is the appropriate format rather
+than array or line-based parsing.
+
+=========================================================
+OUTPUT FORMAT
+=========================================================
+Print the value of:
+
+n^x
+
+Example:
+
 Input:
 2
 5
 
-Working:
+Output:
+32
+
+No extra prompts such as:
+"Enter base:"
+"Enter power:"
+are printed.
+
+=========================================================
+DRY RUN EXAMPLE 1
+=========================================================
+Input:
+2
+5
+
 Initial:
 n = 2
 x = 5
 ans = 1
 
 Step 1:
-x is odd
+x = 5 -> odd
 
 ans = ans * n
-ans = 1 * 2 = 2
+ans = 1 * 2
+ans = 2
 
-x = x - 1 = 4
-
---------------------------------------------------
+x = x - 1
+x = 4
 
 Step 2:
-x is even
+x = 4 -> even
 
-n = n * n = 2 * 2 = 4
-x = x / 2 = 2
+n = n * n
+n = 2 * 2
+n = 4
 
---------------------------------------------------
+x = x / 2
+x = 2
 
 Step 3:
-x is even
+x = 2 -> even
 
-n = 4 * 4 = 16
-x = 2 / 2 = 1
+n = n * n
+n = 4 * 4
+n = 16
 
---------------------------------------------------
+x = x / 2
+x = 1
 
 Step 4:
-x is odd
+x = 1 -> odd
 
-ans = 2 * 16 = 32
-x = 1 - 1 = 0
+ans = ans * n
+ans = 2 * 16
+ans = 32
+
+x = x - 1
+x = 0
 
 Loop ends.
+
+Final:
+ans = 32
 
 Output:
 32
 
---------------------------------------------------
-Dry Run Example 2:
+=========================================================
+DRY RUN EXAMPLE 2
+=========================================================
 Input:
 3
 4
 
-Working:
-3^4 = 81
+Initial:
+n = 3
+x = 4
+ans = 1
+
+Step 1:
+x = 4 -> even
+
+n = 3 * 3
+n = 9
+
+x = 4 / 2
+x = 2
+
+Step 2:
+x = 2 -> even
+
+n = 9 * 9
+n = 81
+
+x = 2 / 2
+x = 1
+
+Step 3:
+x = 1 -> odd
+
+ans = 1 * 81
+ans = 81
+
+x = 1 - 1
+x = 0
+
+Loop ends.
 
 Output:
 81
+
+=========================================================
+FULLY COMMENTED JAVA CODE
+=========================================================
 */
 
 public class power {
 
-    // Method to calculate n^x using Binary Exponentiation
-    public static void expo(int n, int x) {
+    /*
+    =====================================================
+    METHOD NAME : expo
+    =====================================================
 
-        // Variable to store final answer
-        int ans = 1;
+    Purpose:
+    Calculate n^x using Binary Exponentiation.
 
-        // Continue until power becomes 0
+    Parameters:
+    n -> Base
+    x -> Non-negative exponent
+
+    Core idea:
+
+    If x is odd:
+        ans = ans * n
+        x = x - 1
+
+    If x is even:
+        n = n * n
+        x = x / 2
+
+    The exponent becomes smaller very quickly,
+    which makes the algorithm much faster than
+    repeated multiplication.
+    =====================================================
+    */
+    public static void expo(long n, long x) {
+
+        /*
+        Store the final result.
+
+        Initially:
+
+        ans = 1
+
+        This is also correct for x = 0 because:
+
+        n^0 = 1
+        */
+        long ans = 1;
+
+        /*
+        Continue processing while the exponent
+        is greater than zero.
+        */
         while (x > 0) {
 
-            // If power is odd
+            /*
+            Check whether the exponent is odd.
+
+            If x % 2 is 1, the current base contributes
+            one factor to the answer.
+            */
             if (x % 2 == 1) {
 
-                // Multiply current base with answer
+                /*
+                Multiply the current base into the
+                running answer.
+
+                Example:
+
+                ans = 2
+                n = 16
+
+                ans = 2 * 16
+                    = 32
+                */
                 ans *= n;
 
-                // Reduce power by 1
+                /*
+                Reduce the odd exponent by 1.
+
+                Example:
+
+                x = 5
+
+                x = 5 - 1
+                  = 4
+
+                Now the exponent becomes even and can
+                be divided by 2 in the next iteration.
+                */
                 x -= 1;
 
             } else {
 
-                // If power is even:
-                // square the base
+                /*
+                The exponent is even.
+
+                Square the current base.
+
+                Example:
+
+                n = 4
+
+                n = 4 * 4
+                  = 16
+
+                This combines two equal powers into
+                one larger base.
+                */
                 n *= n;
 
-                // divide power by 2
+                /*
+                Divide the exponent by 2.
+
+                Example:
+
+                x = 4
+
+                x = 4 / 2
+                  = 2
+
+                This is the main reason Binary
+                Exponentiation achieves logarithmic
+                time complexity.
+                */
                 x /= 2;
             }
         }
 
-        // Print final result
+        /*
+        Print the final calculated value.
+
+        No additional text is printed because
+        competitive-programming output should contain
+        only the required result.
+        */
         System.out.println(ans);
     }
 
     public static void main(String args[]) {
 
-        // Create Scanner object for input
+        /*
+        Create Scanner object to read input
+        from standard input.
+        */
         Scanner sc = new Scanner(System.in);
 
-        // Read base number
-        int n = sc.nextInt();
+        /*
+        Read the base number.
 
-        // Read exponent/power
-        int x = sc.nextInt();
+        Example Input:
+        2
 
-        // Call exponentiation method
+        After execution:
+        n = 2
+        */
+        long n = sc.nextLong();
+
+        /*
+        Read the exponent.
+
+        Example Input:
+        5
+
+        After execution:
+        x = 5
+        */
+        long x = sc.nextLong();
+
+        /*
+        Call Binary Exponentiation method
+        to calculate n^x.
+        */
         expo(n, x);
 
-        // Close Scanner
+        /*
+        Close Scanner after input processing.
+        */
         sc.close();
     }
 }
 
 /*
-==================================================
-Important Notes for Revision
-==================================================
+=========================================================
+IMPORTANT NOTES FOR REVISION
+=========================================================
 
-1) Binary Exponentiation:
-- Also called Fast Power Algorithm.
-- Used to calculate powers efficiently.
+1. BINARY EXPONENTIATION
+   Also called Fast Power.
+   It reduces the exponent by halving it whenever
+   the exponent is even, giving O(log x) time.
 
---------------------------------------------------
+2. CORE JAVA LOGIC
+   Odd exponent:
+       ans *= n
+       x -= 1
 
-2) Key Logic:
-If power is odd:
-ans = ans * n
-x = x - 1
+   Even exponent:
+       n *= n
+       x /= 2
 
-If power is even:
-n = n * n
-x = x / 2
+   This combines arithmetic operations with
+   integer division and modulus.
 
---------------------------------------------------
+3. OVERFLOW CONCEPT
+   Even though the algorithm is O(log x), the actual
+   value of n^x can become extremely large.
+   Using long increases the safe range compared
+   with int, but very large powers can still overflow.
 
-3) Why is it faster?
-Normal method:
-2^1000 requires 1000 multiplications.
+=========================================================
+HOW TO EXPLAIN THIS CODE IN FRONT OF INTERVIEWER
+=========================================================
 
-Binary Exponentiation:
-Requires only log2(1000) operations.
+"I use Binary Exponentiation to calculate n raised
+to the power x efficiently.
 
---------------------------------------------------
+I maintain an answer variable starting from 1.
 
-4) Time Complexity:
+When the exponent is odd, I multiply the current
+base into the answer and reduce the exponent by 1.
+
+When the exponent is even, I square the base and
+divide the exponent by 2.
+
+This repeatedly reduces the exponent, so instead
+of performing x multiplications, the algorithm
+takes logarithmic time with respect to the exponent."
+
+=========================================================
+TIME COMPLEXITY
+=========================================================
+
 O(log x)
 
---------------------------------------------------
+Reason:
 
-5) Space Complexity:
+Whenever the exponent becomes even, it is divided
+by 2.
+
+Therefore, the number of iterations grows
+logarithmically with x.
+
+=========================================================
+SPACE COMPLEXITY
+=========================================================
+
 O(1)
 
---------------------------------------------------
+Reason:
 
-6) Common Uses:
-- Competitive Programming
-- Modular Exponentiation
-- Matrix Exponentiation
-- Recursion Optimization
-- Large Power Calculations
+Only a constant number of variables are used:
 
---------------------------------------------------
+- n
+- x
+- ans
 
-7) Edge Cases:
-- x = 0 -> answer is 1
-- n = 0
-- large values of x
-*/
+No array, collection, recursion stack, or other
+additional data structure is used.
 
-/*
-==================================================
-How to Explain This Code in Front of Interviewer
-==================================================
+=========================================================
+INTERVIEW QUICK ANSWER
+=========================================================
 
-1) First explain the problem:
-"We need to calculate n raised to the power x efficiently."
+Q1. Why is Binary Exponentiation O(log x)?
 
---------------------------------------------------
+Answer:
+Because for an even exponent, the algorithm squares
+the base and divides the exponent by 2. Therefore,
+the exponent decreases exponentially fast rather
+than one step at a time.
 
-2) Explain normal approach problem:
-"A normal loop would take O(x) time,
-which becomes slow for very large powers."
+---------------------------------------------------------
 
---------------------------------------------------
+Q2. What is the difference between the normal power
+approach and Binary Exponentiation?
 
-3) Explain Binary Exponentiation idea:
-"In Binary Exponentiation,
-if the power is even,
-I square the base and divide the power by 2.
+Answer:
+The normal approach performs multiplication roughly
+x times, so it takes O(x). Binary Exponentiation
+reduces the exponent using squaring and halving,
+so it takes O(log x).
 
-If the power is odd,
-I multiply the current base with the answer
-and reduce power by 1."
+---------------------------------------------------------
 
---------------------------------------------------
+Q3. Why do we square the base when the exponent is even?
 
-4) Explain important observation:
-Example:
-2^8
+Answer:
+Because for an even exponent:
 
-Instead of:
-2 * 2 * 2 * 2 * 2 * 2 * 2 * 2
+n^x = (n^2)^(x/2)
 
-We do:
-2^8 = (2^2)^4
-     = (4^2)^2
-     = (16^2)^1
+So we can replace the base with n^2 and the exponent
+with x/2 without changing the mathematical result.
+This is the key optimization behind Fast Power.
 
-This reduces operations significantly.
-
---------------------------------------------------
-
-5) Explain loop working:
-"The loop continues until exponent becomes 0.
-At every step,
-the exponent reduces quickly."
-
---------------------------------------------------
-
-6) Complexity:
-Time Complexity:
-O(log x)
-
-Space Complexity:
-O(1)
-
---------------------------------------------------
-
-7) Short Interview Summary:
-"This solution uses Binary Exponentiation
-to compute powers efficiently in logarithmic time
-instead of linear time."
+=========================================================
+END OF FILE
+=========================================================
 */
